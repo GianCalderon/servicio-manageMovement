@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springboot.manageMovement.client.PersonalClient;
 import com.springboot.manageMovement.document.ManageMovement;
+import com.springboot.manageMovement.dto.PersonalDto;
 import com.springboot.manageMovement.service.ManageMovementInterface;
 
 import reactor.core.publisher.Flux;
@@ -32,6 +34,7 @@ public class ManageMovementController {
 
 	  @Autowired
 	 ManageMovementInterface service;
+	  
 
 	  @GetMapping
 	  public Mono<ResponseEntity<Flux<ManageMovement>>> toList() {
@@ -78,5 +81,13 @@ public class ManageMovementController {
 	    }).defaultIfEmpty(new ResponseEntity<Void>(HttpStatus.NOT_FOUND));
 
 	  }
+	  
+//	  @GetMapping("/listar")
+//	  public Mono<ResponseEntity<Flux<PersonalDto>>> toLista() {
+//
+//	    return Mono.just(ResponseEntity.ok()
+//	          .contentType(MediaType.APPLICATION_JSON).body(service.listarPersonal()));
+//
+//	  }
 
 }
