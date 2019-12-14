@@ -1,4 +1,4 @@
-package com.springboot.manageMovement;
+package com.springboot.manageOperation;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

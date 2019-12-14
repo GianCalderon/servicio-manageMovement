@@ -1,4 +1,4 @@
-package com.springboot.manageMovement;
+package com.springboot.manageOperation;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,7 @@ public class AppConfig {
 	
 	@Bean
 	public WebClient registrarWebClientPer() {
-		return WebClient.create("http://localhost:8001/api/personal");
+		return WebClient.create("http://localhost:8003/api/savingsAccount");
 	}
 	
 
