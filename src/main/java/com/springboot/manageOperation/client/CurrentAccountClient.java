@@ -12,32 +12,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.springboot.manageOperation.dto.OperationDto;
-import com.springboot.manageOperation.dto.SavingAccountDto;
+import com.springboot.manageOperation.dto.CurrentAccountDto;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-public class SavingAccountClient {
+public class CurrentAccountClient {
 	
 	
-private static final Logger LOGGER = LoggerFactory.getLogger(SavingAccountClient.class);
-
-   WebClient client = WebClient.create("http://localhost:8003/api/savingsAccount");
+private static final Logger LOGGER = LoggerFactory.getLogger(CurrentAccountClient.class);
 	
 //	@Autowired
 //	private WebClient client;
+
+WebClient client = WebClient.create("http://localhost:8004/api/currentAccount");
 	
-	public Flux<SavingAccountDto> findAll() {
+	public Flux<CurrentAccountDto> findAll() {
 		
 		return client.get().accept(MediaType.APPLICATION_JSON)
 				.exchange()
-				.flatMapMany(response ->response.bodyToFlux(SavingAccountDto.class));
+				.flatMapMany(response ->response.bodyToFlux(CurrentAccountDto.class));
 	}
 
 
-	public Mono<SavingAccountDto> findById(String id) {
+	public Mono<CurrentAccountDto> findById(String id) {
 		
 		LOGGER.info("NUMERO DE Id en client :--->"+id);
 		
@@ -47,7 +46,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(SavingAccountClient
 		return client.get().uri("/{id}",param)
 				.accept(MediaType.APPLICATION_JSON)
 				.exchange()
-				.flatMap(response ->response.bodyToMono(SavingAccountDto.class));
+				.flatMap(response ->response.bodyToMono(CurrentAccountDto.class));
 		
 		
 		        
@@ -55,16 +54,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(SavingAccountClient
 
 
 	
-	public Mono<SavingAccountDto> save(SavingAccountDto savingAccountDto) {
+	public Mono<CurrentAccountDto> save(CurrentAccountDto currentAccountDto) {
 		
-		LOGGER.info("listo a enviar: "+savingAccountDto.toString());
+		LOGGER.info("listo a enviar: "+currentAccountDto.toString());
 		
 		return client.post()
 			   .accept(MediaType.APPLICATION_JSON)
 			   .contentType(MediaType.APPLICATION_JSON)
-		       .body(BodyInserters.fromValue(savingAccountDto))
+		       .body(BodyInserters.fromValue(currentAccountDto))
 			   .retrieve()
-			   .bodyToMono(SavingAccountDto.class);
+			   .bodyToMono(CurrentAccountDto.class);
 		
 		
 		
@@ -79,21 +78,21 @@ private static final Logger LOGGER = LoggerFactory.getLogger(SavingAccountClient
 				.then();
 	}
 
-	public Mono<SavingAccountDto> update(SavingAccountDto savingAccountDto, String id) {		
+	public Mono<CurrentAccountDto> update(CurrentAccountDto currentAccountDto, String id) {		
 		
 		
-		LOGGER.info("listo a enviar: "+savingAccountDto.toString()+"ID --> :"+id);
+		LOGGER.info("listo a enviar: "+currentAccountDto.toString()+"ID --> :"+id);
 		
 		return client.put()
 				   .uri("/{id}",Collections.singletonMap("id",id))
 				   .accept(MediaType.APPLICATION_JSON)
 				   .contentType(MediaType.APPLICATION_JSON)
-				   .syncBody(savingAccountDto)
+				   .syncBody(currentAccountDto)
 				   .retrieve()
-				   .bodyToMono(SavingAccountDto.class);
+				   .bodyToMono(CurrentAccountDto.class);
 	}
 	
-	public Mono<SavingAccountDto> findByNumAccount(String numCuenta) {
+	public Mono<CurrentAccountDto> findByNumAccount(String numCuenta) {
 		
 		LOGGER.info("NUMERO DE CUENTA :--->"+numCuenta);
 		
@@ -104,7 +103,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(SavingAccountClient
 		return client.get().uri("/cuenta/{numCuenta}",param)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
-				.bodyToMono(SavingAccountDto.class);
+				.bodyToMono(CurrentAccountDto.class);
 		        
 //		        .exchange()
 //		        .flatMapMany(response ->response.bodyToMono(FamilyDTO.class));

@@ -1,4 +1,4 @@
-package com.springboot.manageOperation;
+package com.springboot.manageOperation.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

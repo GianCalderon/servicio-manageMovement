@@ -1,3 +1,4 @@
+
 package com.springboot.manageOperation.dto;
 
 import java.util.Date;
@@ -13,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 @Data
-public class SavingAccountDto {
+public class CurrentAccountDto {
 	
 	
 
@@ -36,7 +37,7 @@ public class SavingAccountDto {
 	
 	private List<String> idOperation;
 
-	public SavingAccountDto(String name, String numberAccount, Double tea, String state, Double balance,
+	public CurrentAccountDto(String name, String numberAccount, Double tea, String state, Double balance,
 			Date createDate, Date updateDate, List<String> idOperation) {
 		super();
 	
@@ -50,7 +51,7 @@ public class SavingAccountDto {
 		this.idOperation = idOperation;
 	}
 
-	public SavingAccountDto() {
+	public CurrentAccountDto() {
 		
 	} 
 	

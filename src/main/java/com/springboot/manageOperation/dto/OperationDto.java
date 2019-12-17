@@ -28,7 +28,7 @@ public class OperationDto {
 	private String tipoMovement;
 	
 	@NotBlank
-	private int amount;
+	private Double amount;
 	
 	
 	

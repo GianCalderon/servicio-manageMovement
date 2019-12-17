@@ -4,6 +4,6 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 
 import com.springboot.manageOperation.document.ManageOperation;
 
-public interface ManageMovementRepo extends ReactiveMongoRepository<ManageOperation, String> {
+public interface ManageOperationRepo extends ReactiveMongoRepository<ManageOperation, String> {
 
 }

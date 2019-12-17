@@ -6,18 +6,21 @@ import com.springboot.manageOperation.dto.SavingAccountDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface ManageMovementInterface {
+public interface ManageOperationInterface {
 
-	  public Flux<SavingAccountDto> findAll();
+	  public Flux<ManageOperation> findAll();
 	  
-	  public Mono<SavingAccountDto> findById(String id);
+	  public Mono<ManageOperation> findById(String id);
 	  
-	  public Mono<ManageOperation> save(ManageOperation manageOperation);
+	  public Mono<ManageOperation> saveSavings(ManageOperation manageOperation);
+	  
+	  public Mono<ManageOperation> saveCurrent(ManageOperation manageOperation);
 	  
 	  public Mono<ManageOperation> update(ManageOperation manageOperation,String id);
 	  
 	  public Mono<Void> delete(ManageOperation enterpriseCredit);
-	  public Mono<SavingAccountDto> findByNum(String num);
+	  
+//	  public Mono<SavingAccountDto> findByNumAccount(String numAccount);
 	  
 //	  public Mono<PersonalDto> searchDni(ManageOperation manageMovement);
 	  

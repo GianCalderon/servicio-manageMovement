@@ -2,11 +2,15 @@ package com.springboot.manageOperation.document;
 
 import java.util.Date;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -17,21 +21,28 @@ public class ManageOperation {
 	@Id
 	private String id;
 	
-	@NotBlank
+	@NotNull(message = "Operation numDoc must not be null")
+	@NotEmpty(message = "numDoc may not be empty")
 	private String numDoc;
 	
-	@NotBlank
-	private String numberAccount;
+	@NotNull(message = "Operation numAccount must not be null")
+	@NotEmpty(message = "numAccount may not be empty")
+	private String numAccount;
 	
-	@NotBlank
+	@NotNull(message = "Operation numOperation must not be null")
+	@NotEmpty(message = "numOperation may not be empty")
 	private String numOperation;
 	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date dateMovement;
+	@NotNull(message = "Operation typeOperation must not be null")
+	@NotEmpty(message = "typeOperation may not be empty")
+	private String typeOperation;
 	
-	@NotBlank
-	private String tipoMovement;
+	@NotNull(message = "Operation amount must not be null")
+	@Min(1)
+	@Max(3000)
+	private Double amount;
 	
-	@NotBlank
-	private int amount;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Date dateOperation;
+
 }
