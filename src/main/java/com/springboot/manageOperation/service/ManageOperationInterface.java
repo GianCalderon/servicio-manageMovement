@@ -20,6 +20,8 @@ public interface ManageOperationInterface {
 	  
 	  public Mono<Void> delete(ManageOperation enterpriseCredit);
 	  
+	  public Flux<ManageOperation> findByNumAccount(String numAccount);
+	  
 //	  public Mono<SavingAccountDto> findByNumAccount(String numAccount);
 	  
 //	  public Mono<PersonalDto> searchDni(ManageOperation manageMovement);

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.manageOperation.client.SavingAccountClient;
 import com.springboot.manageOperation.document.ManageOperation;
-import com.springboot.manageOperation.dto.SavingAccountDto;
 import com.springboot.manageOperation.service.ManageOperationInterface;
 
 import reactor.core.publisher.Flux;
@@ -98,14 +97,33 @@ public class ManageOperationController {
 	  }
 	  
 	  
-	  @GetMapping("cuenta/{numAccount}")
-	  public Mono<ResponseEntity<SavingAccountDto>> searchCuenta(@PathVariable String numAccount) {
+//	  @GetMapping("account/{numAccount}")
+//	  public Mono<ResponseEntity<SavingAccountDto>> searchCuenta(@PathVariable String numAccount) {
+//
+//	    return client.findByNumAccount(numAccount).map(m -> ResponseEntity.ok()
+//	      .contentType(MediaType.APPLICATION_JSON).body(m))
+//	      .defaultIfEmpty(ResponseEntity.notFound().build());
+//
+//	  }
+	  
+//    @GetMapping("account/{numberAccount}")
+//	  public Mono<ResponseEntity<Flux<ManageOperation>>> searchCuenta(@PathVariable String numberAccount) {
+//
+//	    return service.findByNumAccount(numberAccount).map(m -> ResponseEntity.ok()
+//	      .contentType(MediaType.APPLICATION_JSON).body(m))
+//	      .defaultIfEmpty(ResponseEntity.notFound().build());
+//
+//	  }
+	  
+	  @GetMapping("account/{numberAccount}")
+	  public Mono<ResponseEntity<Flux<ManageOperation>>> searchCuenta(@PathVariable String numberAccount) {
 
-	    return client.findByNumAccount(numAccount).map(m -> ResponseEntity.ok()
-	      .contentType(MediaType.APPLICATION_JSON).body(m))
-	      .defaultIfEmpty(ResponseEntity.notFound().build());
+		    return Mono.just(ResponseEntity.ok()
+		          .contentType(MediaType.APPLICATION_JSON).body(service.findByNumAccount(numberAccount)));
 
-	  }
+		  }
+	  
+
 	  
 	  //GUARDA DIRECTAMENTE AL MICROSERVICIO SAVINGACCOUNT
 //	  @PostMapping

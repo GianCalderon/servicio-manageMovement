@@ -18,8 +18,7 @@ public class SavingAccountDto {
 	
 
 	private String id;
-	private String name;
-	
+	private String nameAccount;
 	private String numberAccount;
 	
 	private Double tea;
@@ -36,11 +35,11 @@ public class SavingAccountDto {
 	
 	private List<String> idOperation;
 
-	public SavingAccountDto(String name, String numberAccount, Double tea, String state, Double balance,
+	public SavingAccountDto(String nameAccount, String numberAccount, Double tea, String state, Double balance,
 			Date createDate, Date updateDate, List<String> idOperation) {
 		super();
 	
-		this.name = name;
+		this.nameAccount = nameAccount;
 		this.numberAccount = numberAccount;
 		this.tea = tea;
 		this.state = state;

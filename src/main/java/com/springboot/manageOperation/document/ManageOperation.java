@@ -27,7 +27,7 @@ public class ManageOperation {
 	
 	@NotNull(message = "Operation numAccount must not be null")
 	@NotEmpty(message = "numAccount may not be empty")
-	private String numAccount;
+	private String numberAccount;
 	
 	@NotNull(message = "Operation numOperation must not be null")
 	@NotEmpty(message = "numOperation may not be empty")

@@ -46,9 +46,11 @@ public class ManageOperationImpl implements ManageOperationInterface {
 	@Override
 	public Mono<ManageOperation> saveSavings(ManageOperation manageOperation) {
 		
-		LOGGER.info("service: "+manageOperation.toString());
+		LOGGER.info("service 1: "+manageOperation.toString());
 		
-	   return clientSavings.findByNumAccount(manageOperation.getNumAccount()).flatMap(p->{
+	   return clientSavings.findByNumAccount(manageOperation.getNumberAccount()).flatMap(p->{
+		   
+			LOGGER.info("service 2: "+p.toString());
 
 		      manageOperation.setDateOperation(new Date());
 	    	return repo.save(manageOperation).flatMap(m->{
@@ -82,7 +84,7 @@ public class ManageOperationImpl implements ManageOperationInterface {
 		
 		LOGGER.info("service: "+manageOperation.toString());
 		
-	   return clientCurrent.findByNumAccount(manageOperation.getNumAccount()).flatMap(p->{
+	   return clientCurrent.findByNumAccount(manageOperation.getNumberAccount()).flatMap(p->{
 	    	 
 		      manageOperation.setDateOperation(new Date());
 	    	  return repo.save(manageOperation).flatMap(m->{
@@ -114,7 +116,7 @@ public class ManageOperationImpl implements ManageOperationInterface {
 		// TODO Auto-generated method stub
 	    return repo.findById(id).flatMap(m -> {
 
-	    	m.setNumAccount(manageOperation.getNumAccount());
+	    	m.setNumberAccount(manageOperation.getNumberAccount());
 	    	m.setNumOperation(manageOperation.getNumOperation());
 	    	m.setTypeOperation(manageOperation.getTypeOperation());
 	    	m.setAmount(manageOperation.getAmount());
@@ -132,12 +134,14 @@ public class ManageOperationImpl implements ManageOperationInterface {
 		return repo.delete(manageOperation);
 	}
 	
-//	public Mono<SavingAccountDto> findByNumAccount(String numAccount) {
-//		
-//		LOGGER.info("NUMERO DE CUENTA :--->"+numAccount);
-//
-//		return client.findByNumAccount(numAccount);
-//	}
+	public Flux<ManageOperation> findByNumAccount(String numAccount) {
+		
+		LOGGER.info("NUMERO DE CUENTA :--->"+numAccount);
+
+		return repo.findByNumberAccount(numAccount);
+			
+	
+	}
 	
 
 	
