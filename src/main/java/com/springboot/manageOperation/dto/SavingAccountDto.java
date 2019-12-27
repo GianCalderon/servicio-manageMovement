@@ -22,9 +22,7 @@ public class SavingAccountDto {
 	private String numberAccount;
 	
 	private Double tea;
-	
 	private String state;
-	
 	private Double balance;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd")
@@ -35,23 +33,7 @@ public class SavingAccountDto {
 	
 	private List<String> idOperation;
 
-	public SavingAccountDto(String nameAccount, String numberAccount, Double tea, String state, Double balance,
-			Date createDate, Date updateDate, List<String> idOperation) {
-		super();
-	
-		this.nameAccount = nameAccount;
-		this.numberAccount = numberAccount;
-		this.tea = tea;
-		this.state = state;
-		this.balance = balance;
-		this.createDate = createDate;
-		this.updateDate = updateDate;
-		this.idOperation = idOperation;
-	}
 
-	public SavingAccountDto() {
-		
-	} 
 	
 
 

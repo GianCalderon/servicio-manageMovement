@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 @Data
-@Document(collection ="Operaciones Bancarias")
+@Document(collection ="Operaciones-Cuentas")
 public class ManageOperation {
 	
 	@Id
