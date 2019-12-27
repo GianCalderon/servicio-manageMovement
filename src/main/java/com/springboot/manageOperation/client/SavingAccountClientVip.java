@@ -19,12 +19,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-public class SavingAccountClient {
+public class SavingAccountClientVip {
 	
 	
-private static final Logger LOGGER = LoggerFactory.getLogger(SavingAccountClient.class);
+private static final Logger LOGGER = LoggerFactory.getLogger(SavingAccountClientVip.class);
 
-   WebClient client = WebClient.create("http://localhost:8003/api/savingsAccount");
+   WebClient client = WebClient.create("http://localhost:8019/api/savingsAccountVip");
 	
 //	@Autowired
 //	private WebClient client;
@@ -82,7 +82,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(SavingAccountClient
 	public Mono<SavingAccountDto> update(SavingAccountDto savingAccountDto, String id) {		
 		
 		
-		LOGGER.info("listo para actualizar: "+savingAccountDto.toString()+"ID --> :"+id);
+		LOGGER.info("listo a enviar: "+savingAccountDto.toString()+"ID --> :"+id);
 		
 		return client.put()
 				   .uri("/{id}",Collections.singletonMap("id",id))
@@ -93,15 +93,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(SavingAccountClient
 				   .bodyToMono(SavingAccountDto.class);
 	}
 	
-	public Mono<SavingAccountDto> findByNumAccount(String numCuenta) {
+	public Mono<SavingAccountDto> findByNumAccount(String numberAccount) {
 		
-		LOGGER.info("NUMERO DE CUENTA :--->"+numCuenta);
+		LOGGER.info("NUMERO DE CUENTA :--->"+numberAccount);
 		
 		Map<String,Object> param=new HashMap<String,Object>();
 		
-		param.put("numCuenta", numCuenta);
+		param.put("numberAccount", numberAccount);
 		
-		return client.get().uri("/cuenta/{numCuenta}",param)
+		return client.get().uri("/cuenta/{numberAccount}",param)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.bodyToMono(SavingAccountDto.class);

@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 @Data
-@Document(collection ="manageOperation")
+@Document(collection ="Operaciones Bancarias")
 public class ManageOperation {
 	
 	@Id
@@ -41,6 +41,9 @@ public class ManageOperation {
 	@Min(1)
 	@Max(3000)
 	private Double amount;
+	
+	@NotNull(message = "Operation amount must not be null")
+	private Double commission;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dateOperation;
