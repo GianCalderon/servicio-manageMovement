@@ -156,10 +156,9 @@ public class ManageOperationController {
 //	  }
 	  
 	  @GetMapping("account/{numberAccount}")
-	  public Mono<ResponseEntity<Flux<ManageOperation>>> searchCuenta(@PathVariable String numberAccount) {
+	  public Flux<ManageOperation> searchCuenta(@PathVariable String numberAccount) {
 
-		    return Mono.just(ResponseEntity.ok()
-		          .contentType(MediaType.APPLICATION_JSON).body(service.findByNumAccount(numberAccount)));
+		    return service.findByNumAccount(numberAccount);
 
 		  }
 	  
