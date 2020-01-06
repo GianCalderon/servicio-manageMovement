@@ -6,13 +6,11 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.springboot.manageOperation.dto.OperationDto;
 import com.springboot.manageOperation.dto.SavingAccountDto;
 
 import reactor.core.publisher.Flux;
@@ -101,7 +99,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(SavingAccountClient
 		
 		param.put("numberAccount", numberAccount);
 		
-		return client.get().uri("/cuenta/{numberAccount}",param)
+		return client.get().uri("/account/{numberAccount}",param)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.bodyToMono(SavingAccountDto.class);

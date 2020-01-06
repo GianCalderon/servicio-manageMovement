@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.springboot.manageOperation.dto.OperationDto;
+
 import com.springboot.manageOperation.dto.SavingAccountDto;
 
 import reactor.core.publisher.Flux;
@@ -101,7 +101,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(SavingAccountClient
 		
 		param.put("numCuenta", numCuenta);
 		
-		return client.get().uri("/cuenta/{numCuenta}",param)
+		return client.get().uri("/account/{numCuenta}",param)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.bodyToMono(SavingAccountDto.class);

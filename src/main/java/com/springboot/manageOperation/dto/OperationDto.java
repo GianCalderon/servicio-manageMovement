@@ -1,36 +1,15 @@
 package com.springboot.manageOperation.dto;
 
-import java.util.Date;
-
-import javax.validation.constraints.NotBlank;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import lombok.Data;
 
 @Data
 public class OperationDto {
 	
+	private String numberAccount;
+	private String typeOperation;
+	private Double amountOperation;
 	
-	@NotBlank
+	private Double comision;
 	private String numDoc;
-	
-	@NotBlank
-	private String numAccount;
-	
-	@NotBlank
-	private String numOperation;
-	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date dateMovement;
-	
-	@NotBlank
-	private String tipoMovement;
-	
-	@NotBlank
-	private Double amount;
-	
-	
-	
 
 }

@@ -14,8 +14,10 @@ import com.springboot.manageOperation.client.PymeAccountClient;
 import com.springboot.manageOperation.client.SavingAccountClient;
 import com.springboot.manageOperation.client.SavingAccountClientVip;
 import com.springboot.manageOperation.document.ManageOperation;
+import com.springboot.manageOperation.dto.OperationDto;
 import com.springboot.manageOperation.repo.ManageOperationRepo;
 import com.springboot.manageOperation.util.TypeOperation;
+import com.springboot.manageOperation.util.UtilConvert;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -45,6 +47,9 @@ public class ManageOperationImpl implements ManageOperationInterface {
 	@Autowired
 	CorporativeAccountClient clientCorporative;
 	
+	@Autowired
+	UtilConvert convert;
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ManageOperationImpl.class);
 	
 	@Override
@@ -60,237 +65,243 @@ public class ManageOperationImpl implements ManageOperationInterface {
 	}
 	
 	@Override
-	public Mono<ManageOperation> saveSavings(ManageOperation manageOperation) {
+	public Mono<ManageOperation> saveSavings(OperationDto operationDto) {
 		
-		LOGGER.info("service 1: "+manageOperation.toString());
-		
-		
-	   return clientSavings.findByNumAccount(manageOperation.getNumberAccount()).flatMap(cuenta->{
-		   
-			LOGGER.info("service 2: "+cuenta.toString());
-
-			 Double comision=0.00;
-			 if(cuenta.getIdOperation().size()>TypeOperation.numMaxMovi)  comision=10.00;
-				 
-		 
-			 manageOperation.setDateOperation(new Date());
-			 manageOperation.setCommission(comision);
-		  
-		      
-	       	return repo.save(manageOperation).flatMap(operacion->{
-
-	            LOGGER.info("cantidad de movimientos ----> "+cuenta.getIdOperation().size());
-	            
-	            LOGGER.info(manageOperation.getTypeOperation().trim().toUpperCase());
-	    		
-	    		if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
-	    			
-	    			 LOGGER.info("cantidad de movimientos ----> "+manageOperation.getTypeOperation().trim().toUpperCase());
-
-	    			cuenta.setBalance((cuenta.getBalance()-operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
-	    		    cuenta.setUpdateDate(new Date());
-	    		    clientSavings.update(cuenta,cuenta.getId()).block();
-	    			
-	    		}else if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
-	    			
-	    			cuenta.setBalance((cuenta.getBalance()+operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
-	    		    cuenta.setUpdateDate(new Date());
-	    		    clientSavings.update(cuenta,cuenta.getId()).block();
-	    		}
-	
-	    	return Mono.just(operacion);
-	    	});
-
-	     });
-	
-	}
-	
-	
-	@Override
-	public Mono<ManageOperation> saveCurrent(ManageOperation manageOperation) {
-		
-		LOGGER.info("service: "+manageOperation.toString());
-		
-	   return clientCurrent.findByNumAccount(manageOperation.getNumberAccount()).flatMap(cuenta->{
-		   
-		     Double comision=0.00;
-			 if(cuenta.getIdOperation().size()>TypeOperation.numMaxMovi)  comision=10.00;
-
-		      manageOperation.setDateOperation(new Date());
-	    	  return repo.save(manageOperation).flatMap(operacion->{
-	
-	    		if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
-
-	    			cuenta.setBalance((cuenta.getBalance()-operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
-	    		    cuenta.setUpdateDate(new Date());
-	    		    clientCurrent.update(cuenta,cuenta.getId()).block();
-	    			
-	    		}else if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
-	    			
-	    			cuenta.setBalance((cuenta.getBalance()+operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
-	    		    cuenta.setUpdateDate(new Date());
-	    		    clientCurrent.update(cuenta,cuenta.getId()).block();
-	    		}
-	
-	    	return Mono.just(operacion);
-	    	});
-	    	
-	     });
-	
-	}
-	
-	@Override
-	public Mono<ManageOperation> saveSavingsVip(ManageOperation manageOperation) {
-		
-		LOGGER.info("service 1: "+manageOperation.toString());
-		
-	   return clientSavingsVip.findByNumAccount(manageOperation.getNumberAccount()).flatMap(cuenta->{
-		   
-			LOGGER.info("service 2: "+cuenta.toString());
+       return repo.findByNumberAccount(operationDto.getNumberAccount()).count().flatMap(cantOperation->{
 			
-			Double comision=0.00;
-			if(cuenta.getIdOperation().size()>TypeOperation.numMaxMovi)  comision=10.00;
+			LOGGER.info("Cantidad_Operaciones_Cuenta:--->"+cantOperation.toString());
 
-		      manageOperation.setDateOperation(new Date());
-	    	return repo.save(manageOperation).flatMap(operacion->{
-	    			
-	    		
-	    		if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
-	    	
-	    			cuenta.setBalance((cuenta.getBalance()-operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
-	    		    cuenta.setUpdateDate(new Date());
-	    		    clientSavingsVip.update(cuenta,cuenta.getId()).block();
-	    			
-	    		}else if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
-	    			
-	    			cuenta.setBalance((cuenta.getBalance()+operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
-	    		    cuenta.setUpdateDate(new Date());
-	    		    clientSavingsVip.update(cuenta,cuenta.getId()).block();
-	    		}
-	
-	    	return Mono.just(operacion);
-	    	});
+			return clientSavings.findByNumAccount(operationDto.getNumberAccount()).flatMap(cuenta->{
+				
+				  Double comision=0.0;
+				  if(cantOperation>=10) comision=10.0;
+				
+				     if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
+				
+				       cuenta.setBalance((cuenta.getBalance()-operationDto.getAmountOperation())-comision);
+    		           cuenta.setUpdateDate(new Date());
+    		           operationDto.setComision(comision);
+    		        
+				     }else if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
+					
+					   cuenta.setBalance((cuenta.getBalance()+operationDto.getAmountOperation())-comision);
+	    		       cuenta.setUpdateDate(new Date());
+	    		        operationDto.setComision(comision);
+				   }
 
-	     });
-	
-	}
-	
-	
-	@Override
-	public Mono<ManageOperation> saveCurrentVip(ManageOperation manageOperation) {
-		
-		LOGGER.info("service: "+manageOperation.toString());
-		
-	   return clientCurrentVip.findByNumAccount(manageOperation.getNumberAccount()).flatMap(cuenta->{
-	    	 
-		   
-		    Double comision=0.00;
-			if(cuenta.getIdOperation().size()>TypeOperation.numMaxMovi)  comision=10.00;
+    		    return  clientSavings.update(cuenta,cuenta.getId()).flatMap(account->{
+    		    	
+    		    	 return repo.save(convert.convertOperation(operationDto));
+    		    });
+    		   
+
+			});
 			
-		      manageOperation.setDateOperation(new Date());
-	    	  return repo.save(manageOperation).flatMap(operacion->{
-	
-	    		if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
-
-	    			cuenta.setBalance((cuenta.getBalance()-operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
-	    		    cuenta.setUpdateDate(new Date());
-	    		    clientCurrentVip.update(cuenta,cuenta.getId()).block();
-	    			
-	    		}else if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
-	    			
-	    			cuenta.setBalance((cuenta.getBalance()+operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
-	    		    cuenta.setUpdateDate(new Date());
-	    		    clientCurrentVip.update(cuenta,cuenta.getId()).block();
-	    		}
-	
-	    	return Mono.just(operacion);
-	    	});
-	    	
-	     });
-	
-	}
-	
-	@Override
-	public Mono<ManageOperation> savePyme(ManageOperation manageOperation) {
-		
-		LOGGER.info("service: "+manageOperation.toString());
-		
-	   return clientPyme.findByNumAccount(manageOperation.getNumberAccount()).flatMap(cuenta->{
-	    	 
-		   
-		    Double comision=0.00;
-			if(cuenta.getIdOperation().size()>TypeOperation.numMaxMovi)  comision=10.00;
 			
-		      manageOperation.setDateOperation(new Date());
-	    	  return repo.save(manageOperation).flatMap(operacion->{
+		
+	   });
 	
-	    		if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
+	}
+	
+	
+	@Override
+	public Mono<ManageOperation> saveCurrent(OperationDto operationDto) {
+		
+		 return repo.findByNumberAccount(operationDto.getNumberAccount()).count().flatMap(sizeAccount->{
+				
+				LOGGER.info("Cantidad_Operaciones_Cuenta:--->"+sizeAccount.toString());
 
-	    			cuenta.setBalance((cuenta.getBalance()-operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
-	    		    cuenta.setUpdateDate(new Date());
-	    		    clientPyme.update(cuenta,cuenta.getId()).block();
-	    			
-	    		}else if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
-	    			
-	    			cuenta.setBalance((cuenta.getBalance()+operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
-	    		    cuenta.setUpdateDate(new Date());
-	    		    clientPyme.update(cuenta,cuenta.getId()).block();
-	    		}
+				return clientCurrent.findByNumAccount(operationDto.getNumberAccount()).flatMap(cuenta->{
+					
+					LOGGER.info("CurrentAccount :--->"+cuenta.toString());
+					
+					Double comision=0.0;
+					if(sizeAccount>=10) comision=10.0;
+					
+					if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
+					
+					    cuenta.setBalance((cuenta.getBalance()-operationDto.getAmountOperation())-comision);
+	    		        cuenta.setUpdateDate(new Date());
+	    		        operationDto.setComision(comision);
+	    		        
+					}else if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
+						
+						cuenta.setBalance((cuenta.getBalance()+operationDto.getAmountOperation())-comision);
+		    		    cuenta.setUpdateDate(new Date());
+		    		    operationDto.setComision(comision);
+					}
+
+	    		    return  clientCurrent.update(cuenta,cuenta.getId()).flatMap(account->{
+
+	    		    	 return repo.save(convert.convertOperation(operationDto));
+	    		    });
+	    		   
+
+				});
+				
+				
+			
+		   });
+		
 	
-	    	return Mono.just(operacion);
-	    	});
-	    	
-	     });
+	}
+	
+	
+	@Override
+	public Mono<ManageOperation> saveSavingsVip(OperationDto operationDto) {
+		
+		return repo.findByNumberAccount(operationDto.getNumberAccount()).count().flatMap(sizeAccount->{
+			
+			LOGGER.info("Cantidad_Operaciones_Cuenta:--->"+sizeAccount.toString());
+
+			return clientSavingsVip.findByNumAccount(operationDto.getNumberAccount()).flatMap(cuenta->{
+				
+				Double comision=0.0;
+				if(sizeAccount>=10) comision=10.0;
+				
+				if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
+				
+				    cuenta.setBalance((cuenta.getBalance()-operationDto.getAmountOperation())-comision);
+    		        cuenta.setUpdateDate(new Date());
+    		        operationDto.setComision(comision);
+    		        
+				}else if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
+					
+					cuenta.setBalance((cuenta.getBalance()+operationDto.getAmountOperation())-comision);
+	    		    cuenta.setUpdateDate(new Date());
+	    		    operationDto.setComision(comision);
+				}
+
+    		    return  clientSavingsVip.update(cuenta,cuenta.getId()).flatMap(account->{
+
+    		    	 return repo.save(convert.convertOperation(operationDto));
+    		    });
+    		   
+
+			});
+			
+			
+		
+	   });
+	
+	
+	}
+	
+	
+	@Override
+	public Mono<ManageOperation> saveCurrentVip(OperationDto operationDto) {
+		
+     return repo.findByNumberAccount(operationDto.getNumberAccount()).count().flatMap(sizeAccount->{
+			
+			LOGGER.info("Cantidad_Operaciones_Cuenta:--->"+sizeAccount.toString());
+
+			return clientCurrentVip.findByNumAccount(operationDto.getNumberAccount()).flatMap(cuenta->{
+				
+				Double comision=0.0;
+				if(sizeAccount>=10) comision=10.0;
+				
+				if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
+				
+				    cuenta.setBalance((cuenta.getBalance()-operationDto.getAmountOperation())-comision);
+    		        cuenta.setUpdateDate(new Date());
+    		        operationDto.setComision(comision);
+    		        
+				}else if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
+					
+					cuenta.setBalance((cuenta.getBalance()+operationDto.getAmountOperation())-comision);
+	    		    cuenta.setUpdateDate(new Date());
+	    		    operationDto.setComision(comision);
+				}
+
+    		    return  clientCurrentVip.update(cuenta,cuenta.getId()).flatMap(account->{
+
+    		    	 return repo.save(convert.convertOperation(operationDto));
+    		    });
+    		   
+
+			});
+			
+			
+		
+	   });
 	
 	}
 	
 	@Override
-	public Mono<ManageOperation> saveCorporative(ManageOperation manageOperation) {
+	public Mono<ManageOperation> savePyme(OperationDto operationDto) {
 		
-		LOGGER.info("service: "+manageOperation.toString());
-		
-	   return clientCorporative.findByNumAccount(manageOperation.getNumberAccount()).flatMap(cuenta->{
-		   
-		   Double comision=0.00;
-		   if(cuenta.getIdOperation().size()>TypeOperation.numMaxMovi)  comision=10.00;
-	    	 
-		      manageOperation.setDateOperation(new Date());
-	    	  return repo.save(manageOperation).flatMap(operacion->{
-	
-	    		if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
+       return repo.findByNumberAccount(operationDto.getNumberAccount()).count().flatMap(sizeAccount->{
+			
+			LOGGER.info("Cantidad_Operaciones_Cuenta:--->"+sizeAccount.toString());
 
-	    			cuenta.setBalance((cuenta.getBalance()-operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
+			return clientPyme.findByNumAccount(operationDto.getNumberAccount()).flatMap(cuenta->{
+				
+				Double comision=0.0;
+				if(sizeAccount>=10) comision=10.0;
+				
+				if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
+				
+				    cuenta.setBalance((cuenta.getBalance()-operationDto.getAmountOperation())-comision);
+    		        cuenta.setUpdateDate(new Date());
+    		        operationDto.setComision(comision);
+    		        
+				}else if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
+					
+					cuenta.setBalance((cuenta.getBalance()+operationDto.getAmountOperation())-comision);
 	    		    cuenta.setUpdateDate(new Date());
-	    		    clientCorporative.update(cuenta,cuenta.getId()).block();
-	    			
-	    		}else if(manageOperation.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
-	    			
-	    			cuenta.setBalance((cuenta.getBalance()+operacion.getAmount())-operacion.getCommission());
-	    		    cuenta.getIdOperation().add(operacion.getId());
-	    		    cuenta.setUpdateDate(new Date());
-	    		    clientCorporative.update(cuenta,cuenta.getId()).block();
-	    		}
-	
-	    	return Mono.just(operacion);
-	    	});
-	    	
-	     });
+	    		    operationDto.setComision(comision);
+				}
+
+    		    return  clientPyme.update(cuenta,cuenta.getId()).flatMap(account->{
+
+    		    	 return repo.save(convert.convertOperation(operationDto));
+    		    });
+    		   
+
+			});
+			
+			
+		
+	   });
 	
 	}
 	
+	@Override
+	public Mono<ManageOperation> saveCorporative(OperationDto operationDto) {
+		
+        return repo.findByNumberAccount(operationDto.getNumberAccount()).count().flatMap(sizeAccount->{
+			
+			LOGGER.info("Cantidad_Operaciones_Cuenta:--->"+sizeAccount.toString());
+
+			return clientCorporative.findByNumAccount(operationDto.getNumberAccount()).flatMap(cuenta->{
+				
+				Double comision=0.0;
+				if(sizeAccount>=10) comision=10.0;
+				
+				if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.debito)) {
+				
+				    cuenta.setBalance((cuenta.getBalance()-operationDto.getAmountOperation())-comision);
+    		        cuenta.setUpdateDate(new Date());
+    		        operationDto.setComision(comision);
+    		        
+				}else if(operationDto.getTypeOperation().trim().toUpperCase().equals(TypeOperation.abono)) {
+					
+					cuenta.setBalance((cuenta.getBalance()+operationDto.getAmountOperation())-comision);
+	    		    cuenta.setUpdateDate(new Date());
+	    		    operationDto.setComision(comision);
+				}
+
+    		    return  clientCorporative.update(cuenta,cuenta.getId()).flatMap(account->{
+
+    		    	 return repo.save(convert.convertOperation(operationDto));
+    		    });
+
+			});
 	
+		
+	   });
 	
+	}
 
 	@Override
 	public Mono<Void> delete(ManageOperation manageOperation) {
@@ -335,10 +346,5 @@ public class ManageOperationImpl implements ManageOperationInterface {
 			
 	
 	}
-	
-	
-
-	
-
 
 }

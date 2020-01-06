@@ -1,7 +1,6 @@
 package com.springboot.manageOperation.controller;
 
 import java.net.URI;
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.manageOperation.client.SavingAccountClient;
 import com.springboot.manageOperation.document.ManageOperation;
+import com.springboot.manageOperation.dto.OperationDto;
 import com.springboot.manageOperation.dto.SearchDate;
 import com.springboot.manageOperation.service.ManageOperationInterface;
 
@@ -61,57 +61,56 @@ public class ManageOperationController {
 
 	  }
 
-	  
 	  @PostMapping("/savings")
-	  public Mono<ResponseEntity<ManageOperation>> saveSavings(@RequestBody  ManageOperation  manageOperation) {
-		  LOGGER.info("controller :"+manageOperation.toString());
+	  public Mono<ResponseEntity<ManageOperation>> saveSavings(@RequestBody  OperationDto operationDto) {
+		  LOGGER.info("controller :"+operationDto.toString());
 
-	    return service.saveSavings(manageOperation).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
+	    return service.saveSavings(operationDto).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
 	                  .contentType(MediaType.APPLICATION_JSON).body(m));
 
 	  }
 	  @PostMapping("/current")
-	  public Mono<ResponseEntity<ManageOperation>> saveCurrent(@RequestBody  ManageOperation  manageOperation) {
-		  LOGGER.info("controller :"+manageOperation.toString());
+	  public Mono<ResponseEntity<ManageOperation>> saveCurrent(@RequestBody  OperationDto operationDto) {
+		  LOGGER.info("controller :"+operationDto.toString());
 
-	    return service.saveCurrent(manageOperation).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
+	    return service.saveCurrent(operationDto).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
 	                  .contentType(MediaType.APPLICATION_JSON).body(m));
 
 	  }
 	  
 	  
 	  @PostMapping("/savingsVip")
-	  public Mono<ResponseEntity<ManageOperation>> saveSavingsVip(@RequestBody  ManageOperation  manageOperation) {
-		  LOGGER.info("controller :"+manageOperation.toString());
+	  public Mono<ResponseEntity<ManageOperation>> saveSavingsVip(@RequestBody  OperationDto operationDto) {
+		  LOGGER.info("controller :"+operationDto.toString());
 
-	    return service.saveSavingsVip(manageOperation).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
+	    return service.saveSavingsVip(operationDto).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
 	                  .contentType(MediaType.APPLICATION_JSON).body(m));
 
 	  }
 	  @PostMapping("/currentVip")
-	  public Mono<ResponseEntity<ManageOperation>> saveCurrentVipaaaaaaaaa(@RequestBody  ManageOperation  manageOperation) {
-		  LOGGER.info("controller :"+manageOperation.toString());
+	  public Mono<ResponseEntity<ManageOperation>> saveCurrentVipaaaaaaaaa(@RequestBody  OperationDto operationDto) {
+		  LOGGER.info("controller :"+operationDto.toString());
 
-	    return service.saveCurrentVip(manageOperation).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
+	    return service.saveCurrentVip(operationDto).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
 	                  .contentType(MediaType.APPLICATION_JSON).body(m));
 
 	  }
 	  
 	  @PostMapping("/pyme")
-	  public Mono<ResponseEntity<ManageOperation>> savePyme(@RequestBody  ManageOperation  manageOperation) {
-		  LOGGER.info("controller :"+manageOperation.toString());
+	  public Mono<ResponseEntity<ManageOperation>> savePyme(@RequestBody OperationDto operationDto) {
+		  LOGGER.info("controller :"+operationDto.toString());
 
-	    return service.savePyme(manageOperation).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
+	    return service.savePyme(operationDto).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
 	                  .contentType(MediaType.APPLICATION_JSON).body(m));
 
 	  }
 
 
 	  @PostMapping("/corporative")
-	  public Mono<ResponseEntity<ManageOperation>> saveCorporative(@RequestBody  ManageOperation  manageOperation) {
-		  LOGGER.info("controller :"+manageOperation.toString());
+	  public Mono<ResponseEntity<ManageOperation>> saveCorporative(@RequestBody  OperationDto operationDto) {
+		  LOGGER.info("controller :"+operationDto.toString());
 
-	    return service.saveCorporative(manageOperation).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
+	    return service.saveCorporative(operationDto).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
 	                  .contentType(MediaType.APPLICATION_JSON).body(m));
 
 	  }
@@ -162,19 +161,8 @@ public class ManageOperationController {
 
 		  }
 	  
-
-	  
-	  //GUARDA DIRECTAMENTE AL MICROSERVICIO SAVINGACCOUNT
-//	  @PostMapping
-//	  public Mono<ResponseEntity<SavingAccountDto>> save(@RequestBody  SavingAccountDto  savingAccountDto) {
-//		  LOGGER.info("controller :"+savingAccountDto.toString());
-//
-//	    return client.save(savingAccountDto).map(m -> ResponseEntity.created(URI.create("/api/manageOperation"))
-//	                  .contentType(MediaType.APPLICATION_JSON).body(m));
-//
-//	  }
-//	  
-	  @PostMapping("/ope")
+ 
+	  @PostMapping("/reportDate")
 	  public Flux<ManageOperation> toListXDate(@RequestBody SearchDate dato) {
 
 	    return service.searchDate(dato.getNumberAccount(), dato.getInicio(), dato.getFin());

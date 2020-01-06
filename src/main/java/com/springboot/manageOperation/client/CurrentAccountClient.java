@@ -79,9 +79,9 @@ WebClient client = WebClient.create("http://localhost:8004/api/currentAccount");
 	}
 
 	public Mono<CurrentAccountDto> update(CurrentAccountDto currentAccountDto, String id) {		
+	
 		
-		
-		LOGGER.info("listo a enviar: "+currentAccountDto.toString()+"ID --> :"+id);
+		LOGGER.info("CurrentAccount para Actualizar :--->"+currentAccountDto.toString());
 		
 		return client.put()
 				   .uri("/{id}",Collections.singletonMap("id",id))
@@ -100,7 +100,7 @@ WebClient client = WebClient.create("http://localhost:8004/api/currentAccount");
 		
 		param.put("numCuenta", numCuenta);
 		
-		return client.get().uri("/cuenta/{numCuenta}",param)
+		return client.get().uri("/account/{numCuenta}",param)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.bodyToMono(CurrentAccountDto.class);

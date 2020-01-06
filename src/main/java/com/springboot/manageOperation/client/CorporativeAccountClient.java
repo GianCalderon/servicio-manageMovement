@@ -100,7 +100,7 @@ WebClient client = WebClient.create("http://localhost:8014/api/corporativeAccoun
 		
 		param.put("numCuenta", numCuenta);
 		
-		return client.get().uri("/cuenta/{numCuenta}",param)
+		return client.get().uri("/account/{numCuenta}",param)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.bodyToMono(CurrentAccountDto.class);

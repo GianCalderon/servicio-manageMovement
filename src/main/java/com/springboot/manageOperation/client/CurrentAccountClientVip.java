@@ -100,7 +100,7 @@ WebClient client = WebClient.create("http://localhost:8015/api/currentAccountVip
 		
 		param.put("numAccount", numAccount);
 		
-		return client.get().uri("/cuenta/{numAccount}",param)
+		return client.get().uri("/account/{numAccount}",param)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.bodyToMono(CurrentAccountDto.class);
